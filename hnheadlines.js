@@ -11,16 +11,16 @@ page.onConsoleMessage = function(msg) {
 
 page.open("https://news.ycombinator.com", function(status) {
     if (status === "success") {
-        page.includeJs("http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js", function() {
-            page.evaluate(function() {
-                var stories = $("a.storylink");
-                stories.each(function(index) {
-                    var link = $(this);
-                    console.log("" + link.text() + "  ::  " + link.attr("href"));
-                });
-            });
-            phantom.exit(0);
+        page.evaluate(function() {
+            var nodeList = document.getElementsByClassName("storylink");
+            for (var i = 0; i < nodeList.length; i++) {
+                var link = nodeList[i];
+                if ("a" === link.tagName.toLowerCase()) {
+                    console.log("" + link.textContent + "  ::  " + link.getAttribute("href"));
+                }
+            }
         });
+        phantom.exit(0);
     } else {
       phantom.exit(1);
     }
